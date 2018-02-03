@@ -12,11 +12,9 @@ STATIC_LDFLAGS=-extldflags '-lncurses -ltinfo -lgpm -static'
 BUILD_FLAGS=--tags static -ldflags "$(LDFLAGS)"
 STATIC_BUILD_FLAGS=--tags static -ldflags "$(LDFLAGS) $(STATIC_LDFLAGS)"
 
-GRV_DIR:=$(dir $(realpath $(lastword $(MAKEFILE_LIST))))
-GOPATH_DIR:=$(GRV_DIR)../../../..
-GOBIN_DIR:=$(GOPATH_DIR)/bin
-GIT2GO_DIR:=$(GOPATH_DIR)/src/gopkg.in/libgit2/git2go.v25
-GIT2GO_PATCH=git2go.v25.patch
+GIT2GO_VERSION=v26
+GIT2GO_DIR:=$(SOURCE_DIR)/vendor/gopkg.in/libgit2/git2go.$(GIT2GO_VERSION)
+GIT2GO_PATCH=git2go.$(GIT2GO_VERSION).patch
 
 all: $(BINARY)
 
@@ -24,12 +22,12 @@ $(BINARY): build-libgit2
 	$(GOCMD) build $(BUILD_FLAGS) -o $(BINARY) $(SOURCE_DIR)
 
 .PHONY: install
-install: $(BINARY)
-	install -m755 -d $(GOBIN_DIR)
-	install -m755 $(BINARY) $(GOBIN_DIR)
+install: build-libgit2
+	$(GOCMD) install $(BUILD_FLAGS) $(SOURCE_DIR)
 
 .PHONY: update
 update:
+	git submodule update --init
 	$(GOCMD) get -d ./...
 
 .PHONY: update-test

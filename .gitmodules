@@ -1,0 +1,3 @@
+[submodule "cmd/grv/vendor/gopkg.in/libgit2/git2go.v26"]
+	path = cmd/grv/vendor/gopkg.in/libgit2/git2go.v26
+	url = https://gopkg.in/libgit2/git2go.v26
